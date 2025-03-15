@@ -15,14 +15,19 @@ public class Scanner
 
     internal List<Token> ScanTokens()
     {
-        // while (!IsAtEnd())
-        // {
-        //     // We are at the beginning of the next lexeme.
-        //     _start = _current;
-        //     ScanToken();
-        // }
+        while (!IsAtEnd())
+        {
+            // We are at the beginning of the next lexeme.
+            _start = _current;
+            ScanToken();
+        }
         _tokens.Add(new Token(TokenType.Eof, "", null, _line));
         return _tokens;
+    }
+
+    private bool IsAtEnd()
+    {
+        return _current >= _source.Length;
     }
 
     private void ScanToken()
