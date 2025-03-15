@@ -45,6 +45,10 @@ public class Scanner
             case '+': AddToken(TokenType.Plus); break;
             case ';': AddToken(TokenType.Semicolon); break;
             case '*': AddToken(TokenType.Star); break;
+            case '!': AddToken(Match('=') ? TokenType.BangEqual : TokenType.Bang); break;
+            case '=': AddToken(Match('=') ? TokenType.EqualEqual : TokenType.Equal); break;
+            case '<': AddToken(Match('=') ? TokenType.LessEqual : TokenType.Less); break;
+            case '>': AddToken(Match('=') ? TokenType.GreaterEqual : TokenType.Greater); break;
             default:
                 Lox.Error(_line, "Unexpected character.");
                 break;
@@ -65,5 +69,13 @@ public class Scanner
     {
         string text = _source[_start.._current];
         _tokens.Add(new Token(type, text, literal, _line));
+    }
+
+    private bool Match(char expected)
+    {
+        if (IsAtEnd()) return false;
+        if (_source[_current] != expected) return false;
+        _current++;
+        return true;
     }
 }
