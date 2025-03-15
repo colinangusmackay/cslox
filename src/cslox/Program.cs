@@ -43,14 +43,14 @@ public class Program
 
     private static void Run(string source)
     {
-        throw new NotImplementedException();
-        // Scanner scanner = new Scanner(source);
+        Scanner scanner = new Scanner(source);
         // List<Token> tokens = scanner.ScanTokens();
         //
         // foreach(var token in tokens)
         // {
         //     Console.WriteLine(token);
         // }
+        throw new NotImplementedException();
     }
 
     private static void Error(int line, string message)
