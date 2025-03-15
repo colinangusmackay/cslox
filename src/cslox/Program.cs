@@ -2,6 +2,7 @@
 
 public class Program
 {
+    internal static bool HadError = false;
     public static async Task Main(string[] args)
     {
         if (args.Length > 1)
@@ -21,17 +22,14 @@ public class Program
 
     private static void RunPrompt()
     {
-        Console.WriteLine("cslox REPL. Press Ctrl+C to exit.");
+        Console.WriteLine("cslox REPL. Enter a blank line to exit.");
         while (true)
         {
             Console.Write("> ");
             var line = Console.ReadLine();
-            if (line == null)
-            {
-                Console.WriteLine();
-                continue;
-            }
+            if (string.IsNullOrWhiteSpace(line)) break;
             Run(line);
+            HadError = false;
         }
     }
 
@@ -39,6 +37,7 @@ public class Program
     {
         var content = await File.ReadAllTextAsync(filePath);
         Run(content);
+        if (HadError) Environment.Exit((int)SysExits.DataError);
     }
 
     private static void Run(string source)
@@ -51,5 +50,15 @@ public class Program
         // {
         //     Console.WriteLine(token);
         // }
+    }
+
+    private static void Error(int line, string message)
+    {
+        Report(line, "", message);
+    }
+
+    private static void Report(int line, string where, string message)
+    {
+        Console.WriteLine($"[{line}] Error{where}: {message}");
     }
 }
