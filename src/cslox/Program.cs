@@ -2,7 +2,8 @@
 
 public class Program
 {
-    internal static bool HadError = false;
+    internal static bool HadError { get; set; } = false;
+
     public static async Task Main(string[] args)
     {
         if (args.Length > 1)
