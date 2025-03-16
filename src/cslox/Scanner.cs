@@ -67,6 +67,9 @@ public class Scanner
             case '\n':
                 _line++;
                 break;
+            case '"':
+                String();
+                break;
             default:
                 Lox.Error(_line, "Unexpected character.");
                 break;
@@ -99,7 +102,28 @@ public class Scanner
 
     private char Peek()
     {
-        if (IsAtEnd()) return '\0';
-        return _source[_current];
+        return IsAtEnd()
+            ? '\0'
+            : _source[_current];
+    }
+
+    private void String()
+    {
+        while (Peek() != '"' && !IsAtEnd())
+        {
+            if (Peek() == '\n') _line++;
+            Advance();
+        }
+
+        if (IsAtEnd())
+        {
+            Lox.Error(_line, "Unterminated string.");
+            return;
+        }
+
+        // Advance past the closing quote character.
+        Advance();
+        string value = _source[(_start + 1)..(_current - 1)];
+        AddToken(TokenType.String, value);
     }
 }
