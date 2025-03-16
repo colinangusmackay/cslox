@@ -1,9 +1,30 @@
+using System.Collections.Frozen;
 using System.Runtime.InteropServices.JavaScript;
 
 namespace cslox;
 
 public class Scanner
 {
+    private static readonly FrozenDictionary<string, TokenType> Keywords = new Dictionary<string, TokenType>
+    {
+        { "and", TokenType.And },
+        { "class", TokenType.Class },
+        { "else", TokenType.Else },
+        { "false", TokenType.False },
+        { "for", TokenType.For },
+        { "fun", TokenType.Fun },
+        { "if", TokenType.If },
+        { "nil", TokenType.Nil },
+        { "or", TokenType.Or },
+        { "print", TokenType.Print },
+        { "return", TokenType.Return },
+        { "super", TokenType.Super },
+        { "this", TokenType.This },
+        { "true", TokenType.True },
+        { "var", TokenType.Var },
+        { "while", TokenType.While },
+    }.ToFrozenDictionary();
+
     private readonly string _source;
     private readonly List<Token> _tokens = [];
     private int _start = 0;
@@ -75,10 +96,22 @@ public class Scanner
             case >= '0' and <= '9':
                 Number();
                 break;
+            case >= 'a' and <= 'z':
+            case >= 'A' and <= 'Z':
+            case '_':
+                Identifier();
+                break;
             default:
                 Lox.Error(_line, "Unexpected character.");
                 break;
         }
+    }
+
+    private void Identifier()
+    {
+        while(IsAlphaNumeric(Peek())) Advance();
+        var text = _source[_start.._current];
+        AddToken(Keywords.GetValueOrDefault(text, TokenType.Identifier));
     }
 
     private void Number()
@@ -96,8 +129,14 @@ public class Scanner
             ? '\0'
             : _source[_current + 1];
 
-    private bool IsDigit(char c)
-     => char.IsBetween(c, '0', '9');
+    private static bool IsDigit(char c)
+        => char.IsBetween(c, '0', '9');
+
+    private static bool IsAlpha(char c)
+        => char.IsBetween(c, 'a', 'z') || char.IsBetween(c, 'A', 'Z') || c == '_';
+
+    private static bool IsAlphaNumeric(char c)
+        => IsAlpha(c) || IsDigit(c);
 
     private char Advance()
         => _source[_current++];
