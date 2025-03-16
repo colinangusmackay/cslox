@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices.JavaScript;
+
 namespace cslox;
 
 public class Scanner
@@ -70,21 +72,38 @@ public class Scanner
             case '"':
                 String();
                 break;
+            case >= '0' and <= '9':
+                Number();
+                break;
             default:
                 Lox.Error(_line, "Unexpected character.");
                 break;
         }
     }
 
-    private char Advance()
+    private void Number()
     {
-        return _source[_current++];
+        while(IsDigit(Peek())) Advance();
+        if (Peek() == '.' && IsDigit(PeekNext()))
+            Advance();
+        while (IsDigit(Peek())) Advance();
+
+        AddToken(TokenType.Number, double.Parse(_source[_start.._current]));
     }
 
+    private char PeekNext()
+        => _current + 1 >= _source.Length
+            ? '\0'
+            : _source[_current + 1];
+
+    private bool IsDigit(char c)
+     => char.IsBetween(c, '0', '9');
+
+    private char Advance()
+        => _source[_current++];
+
     private void AddToken(TokenType type)
-    {
-        AddToken(type, null);
-    }
+        => AddToken(type, null);
 
     private void AddToken(TokenType type, object? literal)
     {
@@ -101,11 +120,9 @@ public class Scanner
     }
 
     private char Peek()
-    {
-        return IsAtEnd()
+        => IsAtEnd()
             ? '\0'
             : _source[_current];
-    }
 
     private void String()
     {
