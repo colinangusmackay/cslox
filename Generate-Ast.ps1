@@ -7,6 +7,8 @@ function DefineAst{ param([string]$baseName, [object[]]$types)
 
     "// AUTO GENERATED FILE" | Out-File $path -Encoding utf8 -Force;
     "" | Out-File $path -Encoding utf8 -Append;
+    "namespace cslox;" | Out-File $path -Encoding utf8 -Append;
+    "" | Out-File $path -Encoding utf8 -Append;
     "public abstract class $baseName" | Out-File $path -Encoding utf8 -Append;
     "{" | Out-File $path -Encoding utf8 -Append;
 

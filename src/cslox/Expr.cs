@@ -1,5 +1,7 @@
 // AUTO GENERATED FILE
 
+namespace cslox;
+
 public abstract class Expr
 {
 
