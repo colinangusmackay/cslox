@@ -4,9 +4,9 @@ namespace cslox.Expressions;
 
 public class Unary : Expr
 {
-    public Unary(Token operator, Expr right)
+    public Unary(Token @operator, Expr right)
     {
-        Operator = operator;
+        Operator = @operator;
         Right = right;
     }
 

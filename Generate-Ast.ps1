@@ -43,7 +43,7 @@ function DefineType{ param ([string]$path, [string]$baseName, [string]$className
         $fieldParts = $field -split " ";
         $type = $fieldParts[0].Trim();
         $name = $fieldParts[1].Trim();
-        $argName = $name.ToLowerInvariant();
+        $argName = AsIdentifier -name $name
         if ($isFirst) {
             $isFirst = $false;
         } else {
@@ -57,7 +57,7 @@ function DefineType{ param ([string]$path, [string]$baseName, [string]$className
     foreach ($field in $fields) {
         $fieldParts = $field -split " ";
         $propertyName = $fieldParts[1].Trim();
-        $argName = $propertyName.ToLowerInvariant();
+        $argName = AsIdentifier -name $propertyName
         "        $propertyName = $argName;" | Out-File $path -Encoding utf8 -Append;
     }
     "    }" | Out-File $path -Encoding utf8 -Append;
@@ -92,6 +92,14 @@ function DefineVisitor{ param ([string]$path, [string]$baseName, [object[]]$type
     }
 
     "}" | Out-File $path -Encoding utf8 -Append;
+}
+
+function AsIdentifier([string]$name) {
+    $name = $name.ToLowerInvariant();
+    switch ($name) {
+        "operator" { return "@$name"; }
+        Default {return $name;}
+    }
 }
 
 Clear-Host

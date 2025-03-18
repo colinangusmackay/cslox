@@ -4,10 +4,10 @@ namespace cslox.Expressions;
 
 public class Binary : Expr
 {
-    public Binary(Expr left, Token operator, Expr right)
+    public Binary(Expr left, Token @operator, Expr right)
     {
         Left = left;
-        Operator = operator;
+        Operator = @operator;
         Right = right;
     }
 
