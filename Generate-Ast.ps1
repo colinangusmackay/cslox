@@ -1,30 +1,35 @@
-$outputDir = "$PSScriptRoot/src/cslox";
+$outputDir = "$PSScriptRoot/src/cslox/Expressions";
+$namespace = "cslox.Expressions";
 
 function DefineAst{ param([string]$baseName, [object[]]$types)
     $path = "$outputDir/$baseName.cs";
 
-    Write-Host "Generating $path";
-
-    "// AUTO GENERATED FILE" | Out-File $path -Encoding utf8 -Force;
-    "" | Out-File $path -Encoding utf8 -Append;
-    "namespace cslox;" | Out-File $path -Encoding utf8 -Append;
-    "" | Out-File $path -Encoding utf8 -Append;
+    FileHeader -path $path;
     "public abstract class $baseName" | Out-File $path -Encoding utf8 -Append;
     "{" | Out-File $path -Encoding utf8 -Append;
+    "}" | Out-File $path -Encoding utf8 -Append;
 
     foreach ($type in $types) {
         $typeParts = $type -split ":";
         $className = $typeParts[0].Trim();
         $fields = $typeParts[1].Trim();
 
-        DefineType -path $path -baseName $baseName -className $className -fieldList $fields;
+        $typePath = "$outputDir/$className.cs";
+        DefineType -path $typePath -baseName $baseName -className $className -fieldList $fields;
     }
 
-    "}" | Out-File $path -Encoding utf8 -Append;
+}
+
+function FileHeader([string]$path) {
+    Write-Host "Generating $path";
+    "// AUTO GENERATED FILE" | Out-File $path -Encoding utf8 -Force;
+    "" | Out-File $path -Encoding utf8 -Append;
+    "namespace $namespace;" | Out-File $path -Encoding utf8 -Append;
+    "" | Out-File $path -Encoding utf8 -Append;
 }
 
 function DefineType{ param ([string]$path, [string]$baseName, [string]$className, [object[]]$fieldList)
-    "" | Out-File $path -Encoding utf8 -Append;
+    FileHeader -path $path;
     "    public class $className : $baseName" | Out-File $path -Encoding utf8 -Append;
     "    {" | Out-File $path -Encoding utf8 -Append;
 
@@ -68,6 +73,10 @@ function DefineType{ param ([string]$path, [string]$baseName, [string]$className
 }
 
 Clear-Host
+if (-not (Test-Path $outputDir)) {
+    New-Item -ItemType Directory -Path $outputDir;
+}
+
 DefineAst -baseName "Expr" -types @(
     "Binary   : Expr Left, Token Operator, Expr Right",
     "Grouping : Expr Expression",
