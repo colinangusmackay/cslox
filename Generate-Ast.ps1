@@ -7,7 +7,10 @@ function DefineAst{ param([string]$baseName, [object[]]$types)
     FileHeader -path $path;
     "public abstract class $baseName" | Out-File $path -Encoding utf8 -Append;
     "{" | Out-File $path -Encoding utf8 -Append;
+    "    public abstract TResult Accept<TResult>(IVisitor<TResult> visitor);" | Out-File $path -Encoding utf8 -Append;
     "}" | Out-File $path -Encoding utf8 -Append;
+
+    DefineVisitor -path "$outputDir/IVisitor.cs" -baseName $baseName -types $types;
 
     foreach ($type in $types) {
         $typeParts = $type -split ":";
@@ -17,7 +20,6 @@ function DefineAst{ param([string]$baseName, [object[]]$types)
         $typePath = "$outputDir/$className.cs";
         DefineType -path $typePath -baseName $baseName -className $className -fieldList $fields;
     }
-
 }
 
 function FileHeader([string]$path) {
@@ -30,12 +32,12 @@ function FileHeader([string]$path) {
 
 function DefineType{ param ([string]$path, [string]$baseName, [string]$className, [object[]]$fieldList)
     FileHeader -path $path;
-    "    public class $className : $baseName" | Out-File $path -Encoding utf8 -Append;
-    "    {" | Out-File $path -Encoding utf8 -Append;
+    "public class $className : $baseName" | Out-File $path -Encoding utf8 -Append;
+    "{" | Out-File $path -Encoding utf8 -Append;
 
     $fields = $fieldList -split ", ";
 
-    "        public $classname(" | Out-File $path -Encoding utf8 -Append -NoNewline;
+    "    public $classname(" | Out-File $path -Encoding utf8 -Append -NoNewline;
     $isFirst = $true;
     foreach ($field in $fields) {
         $fieldParts = $field -split " ";
@@ -51,14 +53,14 @@ function DefineType{ param ([string]$path, [string]$baseName, [string]$className
     }
     ")" | Out-File $path -Encoding utf8 -Append;
 
-    "        {" | Out-File $path -Encoding utf8 -Append;
+    "    {" | Out-File $path -Encoding utf8 -Append;
     foreach ($field in $fields) {
         $fieldParts = $field -split " ";
         $propertyName = $fieldParts[1].Trim();
         $argName = $propertyName.ToLowerInvariant();
-        "            $propertyName = $argName;" | Out-File $path -Encoding utf8 -Append;
+        "        $propertyName = $argName;" | Out-File $path -Encoding utf8 -Append;
     }
-    "        }" | Out-File $path -Encoding utf8 -Append;
+    "    }" | Out-File $path -Encoding utf8 -Append;
 
     foreach ($field in $fields) {
         $fieldParts = $field -split " ";
@@ -66,10 +68,30 @@ function DefineType{ param ([string]$path, [string]$baseName, [string]$className
         $name = $fieldParts[1].Trim();
 
         "" | Out-File $path -Encoding utf8 -Append;
-        "        public $type $name { get; }" | Out-File $path -Encoding utf8 -Append;
+        "    public $type $name { get; }" | Out-File $path -Encoding utf8 -Append;
     }
 
-    "    }" | Out-File $path -Encoding utf8 -Append;
+    "" | Out-File $path -Encoding utf8 -Append;
+    "    public override TResult Accept<TResult>(IVisitor<TResult> visitor)" | Out-File $path -Encoding utf8 -Append;
+    "        => visitor.Visit$className$baseName(this);" | Out-File $path -Encoding utf8 -Append;
+
+    "}" | Out-File $path -Encoding utf8 -Append;
+}
+
+function DefineVisitor{ param ([string]$path, [string]$baseName, [object[]]$types)
+    FileHeader -path $path;
+
+    "public interface IVisitor<TResult>" | Out-File $path -Encoding utf8 -Append;
+    "{" | Out-File $path -Encoding utf8 -Append;
+
+    foreach ($type in $types) {
+        $typeParts = $type -split ":";
+        $className = $typeParts[0].Trim();
+        $argName = $className.ToLowerInvariant();
+        "        TResult Visit$className$baseName($className $argName);" | Out-File $path -Encoding utf8 -Append;
+    }
+
+    "}" | Out-File $path -Encoding utf8 -Append;
 }
 
 Clear-Host
