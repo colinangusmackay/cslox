@@ -74,9 +74,42 @@ public class Parser
         throw new NotImplementedException();
     }
 
-    private void Consume(TokenType rightParen, string expectAfterExpression)
+    private Token Consume(TokenType type, string message)
     {
-        throw new NotImplementedException();
+        if (Check(type)) return Advance();
+
+        throw Error(Peek(), message);
+    }
+
+    private ParserException Error(Token token, string message)
+    {
+        Lox.Error(token, message);
+        return new ParserException(token, message);
+    }
+
+    private void Synchronise()
+    {
+        Advance();
+
+        while (!IsAtEnd())
+        {
+            if (Previous().Type == TokenType.Semicolon) return;
+
+            switch (Peek().Type)
+            {
+                case TokenType.Class:
+                case TokenType.Fun:
+                case TokenType.Var:
+                case TokenType.For:
+                case TokenType.If:
+                case TokenType.While:
+                case TokenType.Print:
+                case TokenType.Return:
+                    return;
+            }
+
+            Advance();
+        }
     }
 
     private bool Match(params Span<TokenType> types)

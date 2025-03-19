@@ -39,6 +39,16 @@ public class Lox
         Report(line, "", message);
     }
 
+    internal static void Error(Token token, string message)
+    {
+        Report(
+            token.Line,
+            token.Type == TokenType.Eof
+                ? " at end"
+                : $" at '{token.Lexeme}'",
+            message);
+    }
+
     private static void Report(int line, string where, string message)
     {
         Console.WriteLine($"[{line}] Error{where}: {message}");
