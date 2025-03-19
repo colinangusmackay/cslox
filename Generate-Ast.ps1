@@ -9,6 +9,7 @@ function DefineAst{ param([string]$baseName, [object[]]$types)
     "{" | Out-File $path -Encoding utf8 -Append;
     "    public abstract TResult Accept<TResult>(IVisitor<TResult> visitor);" | Out-File $path -Encoding utf8 -Append;
     "}" | Out-File $path -Encoding utf8 -Append;
+    UpdateHeaderWithMetadata -path $path;
 
     DefineVisitor -path "$outputDir/IVisitor.cs" -baseName $baseName -types $types;
 
@@ -24,9 +25,17 @@ function DefineAst{ param([string]$baseName, [object[]]$types)
 
 function FileHeader([string]$path) {
     Write-Host "Generating $path";
-    "// AUTO GENERATED FILE" | Out-File $path -Encoding utf8 -Force;
-    "" | Out-File $path -Encoding utf8 -Append;
-    "namespace $namespace;" | Out-File $path -Encoding utf8 -Append;
+
+    $content = "";
+    if (Test-Path $path) {
+        $content = Get-Content -Path $path -Encoding utf8;
+        $indexOfFirstBlankLine = $content.IndexOf("");
+        if ($indexOfFirstBlankLine -gt 0) {
+            $content = $content[0..($indexOfFirstBlankLine)] -join "`n"
+        }
+    }
+
+    "$($content)namespace $namespace;" | Out-File $path -Encoding utf8 -Force;
     "" | Out-File $path -Encoding utf8 -Append;
 }
 
@@ -76,6 +85,7 @@ function DefineType{ param ([string]$path, [string]$baseName, [string]$className
     "        => visitor.Visit$className$baseName(this);" | Out-File $path -Encoding utf8 -Append;
 
     "}" | Out-File $path -Encoding utf8 -Append;
+    UpdateHeaderWithMetadata -path $path;
 }
 
 function DefineVisitor{ param ([string]$path, [string]$baseName, [object[]]$types)
@@ -92,6 +102,8 @@ function DefineVisitor{ param ([string]$path, [string]$baseName, [object[]]$type
     }
 
     "}" | Out-File $path -Encoding utf8 -Append;
+
+    UpdateHeaderWithMetadata -path $path;
 }
 
 function AsIdentifier([string]$name) {
@@ -102,6 +114,60 @@ function AsIdentifier([string]$name) {
     }
 }
 
+function UpdateHeaderWithMetadata([string]$path){
+    $content = Get-Content -Path $path -Encoding utf8
+    for($i = 0; $i -lt $content.Length; $i++) {
+        $line = $content[$i];
+        Write-Host "$i : $line";
+    }
+    $indexOfFirstBlankLine = $content.IndexOf("");
+    Write-Host "Index of first blank line: $indexOfFirstBlankLine";
+    $header = "";
+    if ($indexOfFirstBlankLine -gt 0) {
+        $header = $content[0..($indexOfFirstBlankLine)]
+        $content = $content[($indexOfFirstBlankLine - 1)..($content.Length - 1)] -join "`n"
+        Write-Host "Header:`n$header";
+        Write-Host "Content:`n$content";
+    }
+
+    $existingHashLine = $header | Select-String -Pattern "^// Hash: (.*)$"
+    $existingHash = ""
+    if ($existingHashLine) {
+        $existingHash = $existingHashLine.Matches.Groups[1].Value
+    }
+
+    $dateCreatedLine = $header | Select-String -Pattern "^// Date Created: (.*)$"
+    $dateCreated = (Get-Date -AsUTC).ToString("yyyy-MM-dd HH:mm:ss") + " UTC";
+    if ($dateCreatedLine) {
+        $dateCreated = $dateCreatedLine.Matches.Groups[1].Value
+    }
+
+    $lastUpdatedLine = $header | Select-String -Pattern "^// Last Updated: (.*)$"
+    $lastUpdated = (Get-Date -AsUTC).ToString("yyyy-MM-dd HH:mm:ss") + " UTC";
+    if ($lastUpdatedLine) {
+        $lastUpdated = $lastUpdatedLine.Matches.Groups[1].Value
+    }
+
+    $contentBytes = [System.Text.Encoding]::UTF8.GetBytes($content);
+    $hashBytes = [System.Security.Cryptography.SHA256]::Create().ComputeHash($contentBytes);
+    $hash = [System.BitConverter]::ToString($hashBytes).Replace("-", "").ToLowerInvariant();
+
+    if ($existingHash -ne $hash) {
+        $lastUpdated = (Get-Date -AsUTC).ToString("yyyy-MM-dd HH:mm:ss") + " UTC";
+    }
+
+    "// *****************************************" | Out-File $path -Encoding utf8 -Force;
+    "// ** AUTO GENERATED FILE - DO NOT MODIFY **" | Out-File $path -Encoding utf8 -Append;
+    "// *****************************************" | Out-File $path -Encoding utf8 -Append;
+    "//" | Out-File $path -Encoding utf8 -Append;
+    "// Hash: $hash" | Out-File $path -Encoding utf8 -Append;
+    "// Date Created: $dateCreated" | Out-File $path -Encoding utf8 -Append;
+    "// Last Updated: $lastUpdated" | Out-File $path -Encoding utf8 -Append;
+    "// --------------------------------------------------------------------------------" | Out-File $path -Encoding utf8 -Append;
+    "" | Out-File $path -Encoding utf8 -Append;
+    $content | Out-File $path -Encoding utf8 -Append;
+}
+
 Clear-Host
 if (-not (Test-Path $outputDir)) {
     New-Item -ItemType Directory -Path $outputDir;
@@ -110,7 +176,7 @@ if (-not (Test-Path $outputDir)) {
 DefineAst -baseName "Expr" -types @(
     "Binary   : Expr Left, Token Operator, Expr Right",
     "Grouping : Expr Expression",
-    "Literal  : object Value",
+    "Literal  : object? Value",
     "Unary    : Token Operator, Expr Right"
     );
 
