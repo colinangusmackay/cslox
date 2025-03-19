@@ -1,3 +1,5 @@
+using cslox.Expressions;
+
 namespace cslox;
 
 public class Lox
@@ -28,10 +30,18 @@ public class Lox
     {
         Scanner scanner = new Scanner(source);
         List<Token> tokens = scanner.ScanTokens();
+        Console.WriteLine("Tokens:");
         foreach(var token in tokens)
         {
             Console.WriteLine(token);
         }
+
+        Console.WriteLine();
+        Parser parser = new Parser(tokens);
+        Expr? expression = parser.Parse();
+        if (expression == null) return;
+        Console.WriteLine("AST:");
+        Console.WriteLine(new AstPrinter().Print(expression));
     }
 
     internal static void Error(int line, string message)

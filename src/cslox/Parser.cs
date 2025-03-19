@@ -1,16 +1,27 @@
-using System.ComponentModel.Design;
 using cslox.Expressions;
 
 namespace cslox;
 
 public class Parser
 {
-    private readonly List<Token> _tokens = new();
-    private int _current = 0;
+    private readonly List<Token> _tokens;
+    private int _current;
 
     public Parser(List<Token> tokens)
     {
         _tokens = tokens;
+    }
+
+    public Expr? Parse()
+    {
+        try
+        {
+            return Expression();
+        }
+        catch (ParserException e)
+        {
+            return null;
+        }
     }
 
     private Expr Expression()
@@ -71,7 +82,7 @@ public class Parser
             return new Grouping(expr);
         }
 
-        throw new NotImplementedException();
+        throw Error(Peek(), "Expect expression.");
     }
 
     private Token Consume(TokenType type, string message)
