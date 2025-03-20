@@ -17,6 +17,20 @@ public class Interpreter : IVisitor<object?>
 
     public object? VisitUnaryExpr(Unary unary)
     {
+        object? right = Evaluate(unary.Right);
+        switch (unary.Operator.Type)
+        {
+            case TokenType.Bang:
+                return !IsTruthy(right);
+            case TokenType.Minus:
+                return -(double)right!;
+        }
+
+        return null;
+    }
+
+    private bool IsTruthy(object? right)
+    {
         throw new NotImplementedException();
     }
 
