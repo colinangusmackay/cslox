@@ -15,9 +15,7 @@ public class Interpreter : IVisitor<object?>
     }
 
     public object? VisitLiteralExpr(Literal literal)
-    {
-        throw new NotImplementedException();
-    }
+        => literal.Value;
 
     public object? VisitUnaryExpr(Unary unary)
     {
