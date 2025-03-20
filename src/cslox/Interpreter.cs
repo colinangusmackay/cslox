@@ -10,9 +10,7 @@ public class Interpreter : IVisitor<object?>
     }
 
     public object? VisitGroupingExpr(Grouping grouping)
-    {
-        throw new NotImplementedException();
-    }
+        => Evaluate(grouping.Expression);
 
     public object? VisitLiteralExpr(Literal literal)
         => literal.Value;
@@ -21,4 +19,7 @@ public class Interpreter : IVisitor<object?>
     {
         throw new NotImplementedException();
     }
+
+    private object? Evaluate(Expr expr)
+        => expr.Accept(this);
 }
