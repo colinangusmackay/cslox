@@ -6,7 +6,46 @@ public class Interpreter : IVisitor<object?>
 {
     public object? VisitBinaryExpr(Binary binary)
     {
-        throw new NotImplementedException();
+        object? left = Evaluate(binary.Left);
+        object? right = Evaluate(binary.Right);
+
+        switch (binary.Operator.Type)
+        {
+            case TokenType.BangEqual:
+                return !IsEqual(left, right);
+            case TokenType.EqualEqual:
+                return IsEqual(left, right);
+            case TokenType.Greater:
+                return (double)left! > (double)right!;
+            case TokenType.GreaterEqual:
+                return (double)left! >= (double)right!;
+            case TokenType.Less:
+                return (double)left! < (double)right!;
+            case TokenType.LessEqual:
+                return (double)left! <= (double)right!;
+            case TokenType.Minus:
+                return (double)left! - (double)right!;
+            case TokenType.Plus:
+                if (left is double dl && right is double dr)
+                    return dl + dr;
+                if (left is string sl && right is string sr)
+                    return sl + sr;
+                break;
+            case TokenType.Slash:
+                return (double)left! / (double)right!;
+            case TokenType.Star:
+                return (double)left! * (double)right!;
+        }
+
+        return null;
+    }
+
+    private bool IsEqual(object? left, object? right)
+    {
+        if (left == null && right == null) return true;
+        if (left == null) return false;
+
+        return left.Equals(right);
     }
 
     public object? VisitGroupingExpr(Grouping grouping)
