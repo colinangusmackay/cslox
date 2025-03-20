@@ -29,10 +29,16 @@ public class Interpreter : IVisitor<object?>
         return null;
     }
 
-    private bool IsTruthy(object? right)
-    {
-        throw new NotImplementedException();
-    }
+    private bool IsTruthy(object? value)
+        => value switch
+        {
+            // Following the Ruby rules of truthiness:
+            // Boolean false and nil are falsey.
+            // Everything else is truthy.
+            null => false,
+            bool b => b,
+            _ => true
+        };
 
     private object? Evaluate(Expr expr)
         => expr.Accept(this);
