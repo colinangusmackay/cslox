@@ -5,6 +5,7 @@ namespace cslox;
 public class Lox
 {
     internal static bool HadError { get; set; } = false;
+    internal static bool HadRuntimeError { get; set; } = false;
 
     internal static void RunPrompt()
     {
@@ -24,6 +25,7 @@ public class Lox
         var content = await File.ReadAllTextAsync(filePath);
         Run(content);
         if (HadError) Environment.Exit((int)SysExits.DataError);
+        if (HadRuntimeError) Environment.Exit((int)SysExits.Software);
     }
 
     private static void Run(string source)
@@ -42,6 +44,12 @@ public class Lox
         if (expression == null) return;
         Console.WriteLine("AST:");
         Console.WriteLine(new AstPrinter().Print(expression));
+    }
+
+    internal static void RuntimeError(RuntimeException e)
+    {
+        Console.WriteLine(e.Message);
+        Console.WriteLine($"[{e.Token.Line}] Error at '{e.Token.Lexeme}'");
     }
 
     internal static void Error(int line, string message)
