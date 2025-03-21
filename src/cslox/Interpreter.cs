@@ -4,6 +4,19 @@ namespace cslox;
 
 public class Interpreter : IVisitor<object?>
 {
+    void Interpret(Expr expr)
+    {
+        try
+        {
+            Object? result = Evaluate(expr);
+            Console.WriteLine(Stringify(result));
+        }
+        catch (RuntimeException e)
+        {
+            Lox.RuntimeError(e);
+        }
+    }
+
     public object? VisitBinaryExpr(Binary binary)
     {
         object? left = Evaluate(binary.Left);
@@ -68,6 +81,13 @@ public class Interpreter : IVisitor<object?>
         }
 
         return null;
+    }
+
+    private string Stringify(object? value)
+    {
+        return (value == null
+            ? "nil"
+            : value.ToString()) ?? string.Empty;
     }
 
     private void CheckNumberOperand(Token @operator, object? operand)
