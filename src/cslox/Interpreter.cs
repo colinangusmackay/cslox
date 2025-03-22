@@ -2,14 +2,14 @@ using cslox.AbstractSyntaxTree;
 
 namespace cslox;
 
-public class Interpreter : IExprVisitor<object?>
+public class Interpreter : IExprVisitor<object?>, IStmtVisitor<Unit>
 {
-    public void Interpret(Expr expr)
+    public void Interpret(List<Stmt> statements)
     {
         try
         {
-            Object? result = Evaluate(expr);
-            Console.WriteLine(Stringify(result));
+            foreach (Stmt statement in statements)
+                Execute(statement);
         }
         catch (RuntimeException e)
         {
@@ -50,7 +50,6 @@ public class Interpreter : IExprVisitor<object?>
                     return sl + sr;
 
                 throw new RuntimeException(binary.Operator, "Operands must be two numbers or two strings.");
-                break;
             case TokenType.Slash:
                 CheckNumberOperands(binary.Operator, left, right);
                 return (double)left! / (double)right!;
@@ -81,6 +80,24 @@ public class Interpreter : IExprVisitor<object?>
         }
 
         return null;
+    }
+
+    public Unit VisitExpressionStmt(Expression expression)
+    {
+        Evaluate(expression.InnerExpression);
+        return Unit.Value;
+    }
+
+    public Unit VisitPrintStmt(Print print)
+    {
+        var value = Evaluate(print.Expression);
+        Console.WriteLine(Stringify(value));
+        return Unit.Value;
+    }
+
+    private void Execute(Stmt stmt)
+    {
+        stmt.Accept(this);
     }
 
     private string Stringify(object? value)

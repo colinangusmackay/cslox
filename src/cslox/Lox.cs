@@ -34,9 +34,9 @@ public class Lox
         Scanner scanner = new Scanner(source);
         List<Token> tokens = scanner.ScanTokens();
         Parser parser = new Parser(tokens);
-        List<Stmt> expression = parser.Parse();
-        // if (expression == null) return;
-        // Interpreter.Interpret(expression);
+        List<Stmt> statements = parser.Parse();
+        if (HadError) return;
+        Interpreter.Interpret(statements);
     }
 
     internal static void RuntimeError(RuntimeException e)
