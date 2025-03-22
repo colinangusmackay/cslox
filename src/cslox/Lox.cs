@@ -4,6 +4,7 @@ namespace cslox;
 
 public class Lox
 {
+    private static readonly Interpreter Interpreter = new();
     internal static bool HadError { get; set; } = false;
     internal static bool HadRuntimeError { get; set; } = false;
 
@@ -32,18 +33,10 @@ public class Lox
     {
         Scanner scanner = new Scanner(source);
         List<Token> tokens = scanner.ScanTokens();
-        Console.WriteLine("Tokens:");
-        foreach(var token in tokens)
-        {
-            Console.WriteLine(token);
-        }
-
-        Console.WriteLine();
         Parser parser = new Parser(tokens);
         Expr? expression = parser.Parse();
         if (expression == null) return;
-        Console.WriteLine("AST:");
-        Console.WriteLine(new AstPrinter().Print(expression));
+        Interpreter.Interpret(expression);
     }
 
     internal static void RuntimeError(RuntimeException e)

@@ -4,7 +4,7 @@ namespace cslox;
 
 public class Interpreter : IVisitor<object?>
 {
-    void Interpret(Expr expr)
+    public void Interpret(Expr expr)
     {
         try
         {
