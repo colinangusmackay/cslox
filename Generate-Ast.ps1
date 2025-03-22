@@ -1,5 +1,5 @@
-$outputDir = "$PSScriptRoot/src/cslox/Expressions";
-$namespace = "cslox.Expressions";
+$outputDir = "$PSScriptRoot/src/cslox/AbstractSyntaxTree";
+$namespace = "cslox.AbstractSyntaxTree";
 
 function DefineAst{ param([string]$baseName, [object[]]$types)
     $path = "$outputDir/$baseName.cs";
@@ -180,4 +180,7 @@ DefineAst -baseName "Expr" -types @(
     "Unary    : Token Operator, Expr Right"
     );
 
-
+DefineAst -baseName "Stmt" -types @(
+    "Expression : Expr Expression",
+    "Print      : Expr Expression"
+    );

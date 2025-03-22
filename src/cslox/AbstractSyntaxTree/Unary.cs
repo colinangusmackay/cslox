@@ -2,12 +2,12 @@
 // ** AUTO GENERATED FILE - DO NOT MODIFY **
 // *****************************************
 //
-// Hash: f39b81ac921a46c948ff237679cb81d5ff2bf1a495fdc613602d1c31b1047ed3
+// Hash: aff313b3739df6da581a3b1bdc780049c2c686010470a25c49540daba1e179a2
 // Date Created: 2025-03-19 18:53:15 UTC
-// Last Updated: 2025-03-19 18:53:15 UTC
+// Last Updated: 2025-03-22 20:06:28 UTC
 // --------------------------------------------------------------------------------
 
-namespace cslox.Expressions;
+namespace cslox.AbstractSyntaxTree;
 
 public class Unary : Expr
 {

@@ -2,12 +2,12 @@
 // ** AUTO GENERATED FILE - DO NOT MODIFY **
 // *****************************************
 //
-// Hash: 210c9723cee10475d4d6fe2ee1027f42f5f342affa4025f5c6d588cf7adb2d1d
+// Hash: 23f371564baba60f9c1d213eaae40269919a315ae01e8ab2ba468f1859db6237
 // Date Created: 2025-03-19 18:53:15 UTC
-// Last Updated: 2025-03-19 18:53:15 UTC
+// Last Updated: 2025-03-22 20:06:28 UTC
 // --------------------------------------------------------------------------------
 
-namespace cslox.Expressions;
+namespace cslox.AbstractSyntaxTree;
 
 public class Binary : Expr
 {

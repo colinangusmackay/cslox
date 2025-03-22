@@ -2,12 +2,12 @@
 // ** AUTO GENERATED FILE - DO NOT MODIFY **
 // *****************************************
 //
-// Hash: 78a9a05b055ab53f31f863899c6738398f2002dc736126f19e3d8b0af920a9d3
+// Hash: 4dd8b12836a5ace1dfee6640f0df63dc71845f333957b2dcd4c1cc0987356cc4
 // Date Created: 2025-03-19 18:53:15 UTC
-// Last Updated: 2025-03-19 18:53:15 UTC
+// Last Updated: 2025-03-22 20:06:28 UTC
 // --------------------------------------------------------------------------------
 
-namespace cslox.Expressions;
+namespace cslox.AbstractSyntaxTree;
 
 public class Grouping : Expr
 {

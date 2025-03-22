@@ -2,22 +2,22 @@
 // ** AUTO GENERATED FILE - DO NOT MODIFY **
 // *****************************************
 //
-// Hash: 3af90008b5c68203f672824ff24b2ea0d8742ffa9dac420588d2e2af2d92a5bb
-// Date Created: 2025-03-19 18:53:15 UTC
+// Hash: e2e38af2a6c6aeb52bc7fd2b015570032c2080e2cc1a9e353b83e170ca0ae653
+// Date Created: 2025-03-22 20:06:28 UTC
 // Last Updated: 2025-03-22 20:06:28 UTC
 // --------------------------------------------------------------------------------
 
 namespace cslox.AbstractSyntaxTree;
 
-public class Literal : Expr
+public class Print : Stmt
 {
-    public Literal(object? value)
+    public Print(Expr expression)
     {
-        Value = value;
+        Expression = expression;
     }
 
-    public object? Value { get; }
+    public Expr Expression { get; }
 
     public override TResult Accept<TResult>(IVisitor<TResult> visitor)
-        => visitor.VisitLiteralExpr(this);
+        => visitor.VisitPrintStmt(this);
 }
