@@ -91,6 +91,18 @@ function DefineType{ param ([string]$path, [string]$baseName, [string]$className
 function DefineVisitor{ param ([string]$path, [string]$baseName, [object[]]$types)
     FileHeader -path $path;
 
+    "public interface I$($baseName)Visitor" | Out-File $path -Encoding utf8 -Append;
+    "{" | Out-File $path -Encoding utf8 -Append;
+
+    foreach ($type in $types) {
+        $typeParts = $type -split ":";
+        $className = $typeParts[0].Trim();
+        $argName = $className.ToLowerInvariant();
+        "        void Visit$className$baseName($className $argName);" | Out-File $path -Encoding utf8 -Append;
+    }
+
+    "}" | Out-File $path -Encoding utf8 -Append;
+    "" | Out-File $path -Encoding utf8 -Append;
     "public interface I$($baseName)Visitor<TResult>" | Out-File $path -Encoding utf8 -Append;
     "{" | Out-File $path -Encoding utf8 -Append;
 
