@@ -1,4 +1,4 @@
-using cslox.Expressions;
+using cslox.AbstractSyntaxTree;
 
 namespace cslox;
 
