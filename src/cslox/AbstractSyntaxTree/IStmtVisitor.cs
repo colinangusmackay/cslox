@@ -2,14 +2,14 @@
 // ** AUTO GENERATED FILE - DO NOT MODIFY **
 // *****************************************
 //
-// Hash: d6e860a639aafe2c7a2540c52cbfe95df9795642a6a7408fb4048e7eaa1ac0db
-// Date Created: 2025-03-19 18:53:15 UTC
-// Last Updated: 2025-03-22 20:06:28 UTC
+// Hash: c1c48f1b3c24f8e46035524d1b4f66cd8e885ac5dfe3178cab99542300bb1922
+// Date Created: 2025-03-22 20:41:56 UTC
+// Last Updated: 2025-03-22 20:41:56 UTC
 // --------------------------------------------------------------------------------
 
 namespace cslox.AbstractSyntaxTree;
 
-public interface IVisitor<TResult>
+public interface IStmtVisitor<TResult>
 {
         TResult VisitExpressionStmt(Expression expression);
         TResult VisitPrintStmt(Print print);

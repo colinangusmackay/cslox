@@ -11,7 +11,7 @@ function DefineAst{ param([string]$baseName, [object[]]$types)
     "}" | Out-File $path -Encoding utf8 -Append;
     UpdateHeaderWithMetadata -path $path;
 
-    DefineVisitor -path "$outputDir/IVisitor.cs" -baseName $baseName -types $types;
+    DefineVisitor -path "$outputDir/I$($baseName)Visitor.cs" -baseName $baseName -types $types;
 
     foreach ($type in $types) {
         $typeParts = $type -split ":";
@@ -91,7 +91,7 @@ function DefineType{ param ([string]$path, [string]$baseName, [string]$className
 function DefineVisitor{ param ([string]$path, [string]$baseName, [object[]]$types)
     FileHeader -path $path;
 
-    "public interface IVisitor<TResult>" | Out-File $path -Encoding utf8 -Append;
+    "public interface I$($baseName)Visitor<TResult>" | Out-File $path -Encoding utf8 -Append;
     "{" | Out-File $path -Encoding utf8 -Append;
 
     foreach ($type in $types) {
@@ -118,16 +118,12 @@ function UpdateHeaderWithMetadata([string]$path){
     $content = Get-Content -Path $path -Encoding utf8
     for($i = 0; $i -lt $content.Length; $i++) {
         $line = $content[$i];
-        Write-Host "$i : $line";
     }
     $indexOfFirstBlankLine = $content.IndexOf("");
-    Write-Host "Index of first blank line: $indexOfFirstBlankLine";
     $header = "";
     if ($indexOfFirstBlankLine -gt 0) {
         $header = $content[0..($indexOfFirstBlankLine)]
         $content = $content[($indexOfFirstBlankLine - 1)..($content.Length - 1)] -join "`n"
-        Write-Host "Header:`n$header";
-        Write-Host "Content:`n$content";
     }
 
     $existingHashLine = $header | Select-String -Pattern "^// Hash: (.*)$"
@@ -181,6 +177,6 @@ DefineAst -baseName "Expr" -types @(
     );
 
 DefineAst -baseName "Stmt" -types @(
-    "Expression : Expr Expression",
+    "Expression : Expr InnerExpression",
     "Print      : Expr Expression"
     );
