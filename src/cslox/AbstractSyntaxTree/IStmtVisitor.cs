@@ -2,18 +2,12 @@
 // ** AUTO GENERATED FILE - DO NOT MODIFY **
 // *****************************************
 //
-// Hash: bc44909296cd89d3d819dec60272c96fc803520accfbf422f131bd9711ed1687
+// Hash: c1c48f1b3c24f8e46035524d1b4f66cd8e885ac5dfe3178cab99542300bb1922
 // Date Created: 2025-03-22 20:41:56 UTC
-// Last Updated: 2025-03-22 21:20:36 UTC
+// Last Updated: 2025-03-22 21:41:42 UTC
 // --------------------------------------------------------------------------------
 
 namespace cslox.AbstractSyntaxTree;
-
-public interface IStmtVisitor
-{
-        void VisitExpressionStmt(Expression expression);
-        void VisitPrintStmt(Print print);
-}
 
 public interface IStmtVisitor<TResult>
 {
