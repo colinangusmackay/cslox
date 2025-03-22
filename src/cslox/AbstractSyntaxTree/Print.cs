@@ -2,9 +2,9 @@
 // ** AUTO GENERATED FILE - DO NOT MODIFY **
 // *****************************************
 //
-// Hash: e2e38af2a6c6aeb52bc7fd2b015570032c2080e2cc1a9e353b83e170ca0ae653
+// Hash: fcab3b90a5e7765d4cf9d205470609dd45822ffea3bec54c0132c66d9b95be51
 // Date Created: 2025-03-22 20:06:28 UTC
-// Last Updated: 2025-03-22 20:06:28 UTC
+// Last Updated: 2025-03-22 20:46:46 UTC
 // --------------------------------------------------------------------------------
 
 namespace cslox.AbstractSyntaxTree;
@@ -18,6 +18,6 @@ public class Print : Stmt
 
     public Expr Expression { get; }
 
-    public override TResult Accept<TResult>(IVisitor<TResult> visitor)
+    public override TResult Accept<TResult>(IStmtVisitor<TResult> visitor)
         => visitor.VisitPrintStmt(this);
 }

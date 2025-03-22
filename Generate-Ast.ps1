@@ -7,7 +7,7 @@ function DefineAst{ param([string]$baseName, [object[]]$types)
     FileHeader -path $path;
     "public abstract class $baseName" | Out-File $path -Encoding utf8 -Append;
     "{" | Out-File $path -Encoding utf8 -Append;
-    "    public abstract TResult Accept<TResult>(IVisitor<TResult> visitor);" | Out-File $path -Encoding utf8 -Append;
+    "    public abstract TResult Accept<TResult>(I$($baseName)Visitor<TResult> visitor);" | Out-File $path -Encoding utf8 -Append;
     "}" | Out-File $path -Encoding utf8 -Append;
     UpdateHeaderWithMetadata -path $path;
 
@@ -81,7 +81,7 @@ function DefineType{ param ([string]$path, [string]$baseName, [string]$className
     }
 
     "" | Out-File $path -Encoding utf8 -Append;
-    "    public override TResult Accept<TResult>(IVisitor<TResult> visitor)" | Out-File $path -Encoding utf8 -Append;
+    "    public override TResult Accept<TResult>(I$($baseName)Visitor<TResult> visitor)" | Out-File $path -Encoding utf8 -Append;
     "        => visitor.Visit$className$baseName(this);" | Out-File $path -Encoding utf8 -Append;
 
     "}" | Out-File $path -Encoding utf8 -Append;

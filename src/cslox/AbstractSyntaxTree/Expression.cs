@@ -2,9 +2,9 @@
 // ** AUTO GENERATED FILE - DO NOT MODIFY **
 // *****************************************
 //
-// Hash: 2698d621f7f120659788e225a4cf4c2ba8d46fa0793743f679e5a8342d05129c
+// Hash: 01c46b508c5594de920feb78f23d1491da363e68b57136e24d49cb831a4704cb
 // Date Created: 2025-03-22 20:06:28 UTC
-// Last Updated: 2025-03-22 20:34:19 UTC
+// Last Updated: 2025-03-22 20:46:46 UTC
 // --------------------------------------------------------------------------------
 
 namespace cslox.AbstractSyntaxTree;
@@ -18,6 +18,6 @@ public class Expression : Stmt
 
     public Expr InnerExpression { get; }
 
-    public override TResult Accept<TResult>(IVisitor<TResult> visitor)
+    public override TResult Accept<TResult>(IStmtVisitor<TResult> visitor)
         => visitor.VisitExpressionStmt(this);
 }
