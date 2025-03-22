@@ -2,7 +2,7 @@ using cslox.AbstractSyntaxTree;
 
 namespace cslox;
 
-public class Interpreter : IVisitor<object?>
+public class Interpreter : IExprVisitor<object?>
 {
     public void Interpret(Expr expr)
     {

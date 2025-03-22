@@ -3,7 +3,7 @@ using cslox.AbstractSyntaxTree;
 
 namespace cslox;
 
-public class AstPrinter : IVisitor<string>
+public class AstPrinter : IExprVisitor<string>
 {
     public string Print(Expr expr)
         => expr.Accept(this);
