@@ -1,6 +1,6 @@
 namespace cslox;
 
-public class Environment
+public class InterpreterEnvironment
 {
     private readonly Dictionary<string, object?> _values = new();
     
