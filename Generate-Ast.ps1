@@ -185,10 +185,12 @@ DefineAst -baseName "Expr" -types @(
     "Binary   : Expr Left, Token Operator, Expr Right",
     "Grouping : Expr Expression",
     "Literal  : object? Value",
-    "Unary    : Token Operator, Expr Right"
+    "Unary    : Token Operator, Expr Right",
+    "Variable : Token Name"
     );
 
 DefineAst -baseName "Stmt" -types @(
     "Expression : Expr InnerExpression",
-    "Print      : Expr Expression"
+    "Print      : Expr Expression",
+    "Var        : Token Name, Expr? Initializer"
     );
