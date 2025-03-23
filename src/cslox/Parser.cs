@@ -12,14 +12,41 @@ public class Parser
         _tokens = tokens;
     }
 
-    public List<Stmt> Parse()
+    public List<Stmt?> Parse()
     {
-        List<Stmt> statements = new();
+        List<Stmt?> statements = new();
         while (!IsAtEnd())
         {
-            statements.Add(Statement());
+            statements.Add(Declaration());
         }
         return statements;
+    }
+
+    private Stmt? Declaration()
+    {
+        try
+        {
+            if (Match(TokenType.Var)) return VarDeclaration();
+            return Statement();
+        }
+        catch (ParserException e)
+        {
+            Synchronise();
+            return null;
+        }
+    }
+
+    private Stmt VarDeclaration()
+    {
+         Token name = Consume(TokenType.Identifier, "Expect variable name.");
+         Expr? initializer = null;
+         if (Match(TokenType.Equal))
+         {
+             initializer = Expression();
+         }
+
+         Consume(TokenType.Semicolon, "Expect ';' after variable declaration.");
+         return new Var(name, initializer);
     }
 
     private Stmt Statement()
@@ -92,6 +119,8 @@ public class Parser
         {
             return new Literal(Previous().Literal);
         }
+
+        if (Match(TokenType.Identifier)) return new Variable(Previous());
 
         if (Match(TokenType.LeftParen))
         {
