@@ -12,12 +12,13 @@ public class Parser
         _tokens = tokens;
     }
 
-    public List<Stmt?> Parse()
+    public List<Stmt> Parse()
     {
-        List<Stmt?> statements = new();
+        List<Stmt> statements = new();
         while (!IsAtEnd())
         {
-            statements.Add(Declaration());
+            var statement = Declaration();
+            if (statement != null) statements.Add(statement);
         }
         return statements;
     }
@@ -29,7 +30,7 @@ public class Parser
             if (Match(TokenType.Var)) return VarDeclaration();
             return Statement();
         }
-        catch (ParserException e)
+        catch (ParserException)
         {
             Synchronise();
             return null;

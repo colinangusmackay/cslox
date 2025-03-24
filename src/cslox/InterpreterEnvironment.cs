@@ -17,4 +17,15 @@ public class InterpreterEnvironment
         }
         throw new RuntimeException(name, $"Undefined variable '{name.Lexeme}'.");
     }
+
+    public void Assign(Token name, object? value)
+    {
+        if (_values.TryGetValue(name.Lexeme, out var oldValue))
+        {
+            _values[name.Lexeme] = value;
+            return;
+        }
+
+        throw new RuntimeException(name, $"Undefined variable '{name.Lexeme}'.");
+    }
 }

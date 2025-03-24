@@ -112,6 +112,13 @@ public class Interpreter : IExprVisitor<object?>, IStmtVisitor<Unit>
         return Unit.Value;
     }
 
+    public object? VisitAssignExpr(Assign assign)
+    {
+        object? value = Evaluate(assign.Value);
+        _interpreterEnvironment.Assign(assign.Name, value);
+        return value;
+    }
+
     private void Execute(Stmt stmt)
     {
         stmt.Accept(this);
