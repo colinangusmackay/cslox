@@ -70,7 +70,27 @@ public class Parser
     }
 
     private Expr Expression()
-        => Equality();
+        => Assignment();
+
+    private Expr Assignment()
+    {
+        Expr expr = Equality();
+
+        if (Match(TokenType.Equal))
+        {
+            Token equals = Previous();
+            Expr value = Assignment();
+
+            if (expr is Variable variable)
+            {
+                return new Assign(variable.Name, value);
+            }
+
+            Error(equals, "Invalid assignment target.");
+        }
+
+        return expr;
+    }
 
     private Expr Equality()
         => LeftAssociative(Comparison, TokenType.BangEqual, TokenType.EqualEqual);

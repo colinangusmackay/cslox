@@ -182,6 +182,7 @@ if (-not (Test-Path $outputDir)) {
 }
 
 DefineAst -baseName "Expr" -types @(
+    "Assign   : Token Name, Expr Value",
     "Binary   : Expr Left, Token Operator, Expr Right",
     "Grouping : Expr Expression",
     "Literal  : object? Value",
