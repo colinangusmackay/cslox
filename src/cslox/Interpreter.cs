@@ -4,7 +4,7 @@ namespace cslox;
 
 public class Interpreter : IExprVisitor<object?>, IStmtVisitor<Unit>
 {
-    private readonly InterpreterEnvironment _interpreterEnvironment = new();
+    private InterpreterEnvironment _interpreterEnvironment = new();
 
     public void Interpret(List<Stmt> statements)
     {
@@ -89,6 +89,12 @@ public class Interpreter : IExprVisitor<object?>, IStmtVisitor<Unit>
         return _interpreterEnvironment.Get(variable.Name);
     }
 
+    public Unit VisitBlockStmt(Block block)
+    {
+        ExecuteBlock(block.Statements, new InterpreterEnvironment(_interpreterEnvironment));
+        return Unit.Value;
+    }
+
     public Unit VisitExpressionStmt(Expression expression)
     {
         Evaluate(expression.InnerExpression);
@@ -122,6 +128,21 @@ public class Interpreter : IExprVisitor<object?>, IStmtVisitor<Unit>
     private void Execute(Stmt stmt)
     {
         stmt.Accept(this);
+    }
+
+    private void ExecuteBlock(List<Stmt> statements, InterpreterEnvironment environment)
+    {
+        InterpreterEnvironment previous = _interpreterEnvironment;
+        try
+        {
+            _interpreterEnvironment = environment;
+            foreach (Stmt statement in statements)
+                Execute(statement);
+        }
+        finally
+        {
+            _interpreterEnvironment = previous;
+        }
     }
 
     private string Stringify(object? value)

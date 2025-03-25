@@ -191,6 +191,7 @@ DefineAst -baseName "Expr" -types @(
     );
 
 DefineAst -baseName "Stmt" -types @(
+    "Block      : List<Stmt> Statements",
     "Expression : Expr InnerExpression",
     "Print      : Expr Expression",
     "Var        : Token Name, Expr? Initializer"
