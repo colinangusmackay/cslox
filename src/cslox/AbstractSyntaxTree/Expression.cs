@@ -2,18 +2,18 @@
 // ** AUTO GENERATED FILE - DO NOT MODIFY **
 // *****************************************
 //
-// Hash: 01c46b508c5594de920feb78f23d1491da363e68b57136e24d49cb831a4704cb
+// Hash: 5e1bf29c7bcfac2a264ddba220e044cb89217c17fdc7a380152a8b6cbd13974d
 // Date Created: 2025-03-22 20:06:28 UTC
-// Last Updated: 2025-03-22 20:46:46 UTC
+// Last Updated: 2025-03-26 21:31:09 UTC
 // --------------------------------------------------------------------------------
 
 namespace cslox.AbstractSyntaxTree;
 
 public class Expression : Stmt
 {
-    public Expression(Expr innerexpression)
+    public Expression(Expr innerExpression)
     {
-        InnerExpression = innerexpression;
+        InnerExpression = innerExpression;
     }
 
     public Expr InnerExpression { get; }

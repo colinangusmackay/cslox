@@ -1,6 +1,8 @@
 $outputDir = "$PSScriptRoot/src/cslox/AbstractSyntaxTree";
 $namespace = "cslox.AbstractSyntaxTree";
 
+$keywords = [System.Collections.Immutable.ImmutableHashSet]::Create("if", "operator", "var");
+
 function DefineAst{ param([string]$baseName, [object[]]$types)
     $path = "$outputDir/$baseName.cs";
 
@@ -91,25 +93,13 @@ function DefineType{ param ([string]$path, [string]$baseName, [string]$className
 function DefineVisitor{ param ([string]$path, [string]$baseName, [object[]]$types)
     FileHeader -path $path;
 
-    # "public interface I$($baseName)Visitor" | Out-File $path -Encoding utf8 -Append;
-    # "{" | Out-File $path -Encoding utf8 -Append;
-
-    # foreach ($type in $types) {
-    #     $typeParts = $type -split ":";
-    #     $className = $typeParts[0].Trim();
-    #     $argName = $className.ToLowerInvariant();
-    #     "        void Visit$className$baseName($className $argName);" | Out-File $path -Encoding utf8 -Append;
-    # }
-
-    # "}" | Out-File $path -Encoding utf8 -Append;
-    # "" | Out-File $path -Encoding utf8 -Append;
     "public interface I$($baseName)Visitor<TResult>" | Out-File $path -Encoding utf8 -Append;
     "{" | Out-File $path -Encoding utf8 -Append;
 
     foreach ($type in $types) {
         $typeParts = $type -split ":";
         $className = $typeParts[0].Trim();
-        $argName = $className.ToLowerInvariant();
+        $argName = AsIdentifier -name $className
         "        TResult Visit$className$baseName($className $argName);" | Out-File $path -Encoding utf8 -Append;
     }
 
@@ -119,11 +109,12 @@ function DefineVisitor{ param ([string]$path, [string]$baseName, [object[]]$type
 }
 
 function AsIdentifier([string]$name) {
-    $name = $name.ToLowerInvariant();
-    switch ($name) {
-        "operator" { return "@$name"; }
-        Default {return $name;}
+    $name = $name.Trim();
+    $name = $name[0].ToString().ToLowerInvariant() + $name.Substring(1);
+    if ($keywords.Contains($name)) {
+        return "@" + $name;
     }
+    return $name;
 }
 
 function UpdateHeaderWithMetadata([string]$path){
@@ -193,6 +184,7 @@ DefineAst -baseName "Expr" -types @(
 DefineAst -baseName "Stmt" -types @(
     "Block      : List<Stmt> Statements",
     "Expression : Expr InnerExpression",
+    "If         : Expr Condition, Stmt ThenBranch, Stmt? ElseBranch",
     "Print      : Expr Expression",
     "Var        : Token Name, Expr? Initializer"
     );

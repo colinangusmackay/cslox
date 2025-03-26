@@ -52,9 +52,23 @@ public class Parser
 
     private Stmt Statement()
     {
+        if (Match(TokenType.If)) return IfStatement();
         if (Match(TokenType.Print)) return PrintStatement();
         if (Match(TokenType.LeftBrace)) return new Block(Block());
         return ExpressionStatement();
+    }
+
+    private Stmt IfStatement()
+    {
+        Consume(TokenType.LeftParen, "Expect '(' after 'if'.");
+        Expr condition = Expression();
+        Consume(TokenType.RightParen, "Expect ')' after if condition.");
+
+        Stmt thenBranch = Statement();
+        Stmt? elseBranch = null;
+        if (Match(TokenType.Else)) elseBranch = Statement();
+
+        return new If(condition, thenBranch, elseBranch);
     }
 
     private List<Stmt> Block()

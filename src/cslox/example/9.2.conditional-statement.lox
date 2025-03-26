@@ -1,0 +1,6 @@
+var a = nil;
+
+if (a)
+  print "a is truthy";
+else
+  print "a is falsey";

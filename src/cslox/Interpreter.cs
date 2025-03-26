@@ -101,6 +101,16 @@ public class Interpreter : IExprVisitor<object?>, IStmtVisitor<Unit>
         return Unit.Value;
     }
 
+    public Unit VisitIfStmt(If @if)
+    {
+        if (IsTruthy(Evaluate(@if.Condition)))
+            Execute(@if.ThenBranch);
+        else if (@if.ElseBranch != null)
+            Execute(@if.ElseBranch);
+
+        return Unit.Value;
+    }
+
     public Unit VisitPrintStmt(Print print)
     {
         var value = Evaluate(print.Expression);
