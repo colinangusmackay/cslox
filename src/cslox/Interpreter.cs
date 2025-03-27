@@ -69,6 +69,23 @@ public class Interpreter : IExprVisitor<object?>, IStmtVisitor<Unit>
     public object? VisitLiteralExpr(Literal literal)
         => literal.Value;
 
+    public object? VisitLogicalExpr(Logical logical)
+    {
+        var left = Evaluate(logical.Left);
+        if (logical.Operator.Type == TokenType.Or)
+        {
+            // left || right
+            if (IsTruthy(left)) return left;
+        }
+        else
+        {
+            // left && right
+            if (!IsTruthy(left)) return left;
+        }
+
+        return Evaluate(logical.Right);
+    }
+
     public object? VisitUnaryExpr(Unary unary)
     {
         object? right = Evaluate(unary.Right);

@@ -119,9 +119,6 @@ function AsIdentifier([string]$name) {
 
 function UpdateHeaderWithMetadata([string]$path){
     $content = Get-Content -Path $path -Encoding utf8
-    for($i = 0; $i -lt $content.Length; $i++) {
-        $line = $content[$i];
-    }
     $indexOfFirstBlankLine = $content.IndexOf("");
     $header = "";
     if ($indexOfFirstBlankLine -gt 0) {
@@ -177,6 +174,7 @@ DefineAst -baseName "Expr" -types @(
     "Binary   : Expr Left, Token Operator, Expr Right",
     "Grouping : Expr Expression",
     "Literal  : object? Value",
+    "Logical  : Expr Left, Token Operator, Expr Right",
     "Unary    : Token Operator, Expr Right",
     "Variable : Token Name"
     );
