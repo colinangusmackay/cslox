@@ -2,9 +2,9 @@
 // ** AUTO GENERATED FILE - DO NOT MODIFY **
 // *****************************************
 //
-// Hash: 8347b8a0d1b167b47d2776f474ede481b07c3620be0917a638e0ec4b06ce69d5
+// Hash: 851423de7afcb227e56fcf2d30599a7bfe2be7b0e47f0ddd90b48415ad82d6db
 // Date Created: 2025-03-22 20:41:56 UTC
-// Last Updated: 2025-03-26 21:31:09 UTC
+// Last Updated: 2025-03-27 21:54:40 UTC
 // --------------------------------------------------------------------------------
 
 namespace cslox.AbstractSyntaxTree;
@@ -16,4 +16,5 @@ public interface IStmtVisitor<TResult>
         TResult VisitIfStmt(If @if);
         TResult VisitPrintStmt(Print print);
         TResult VisitVarStmt(Var @var);
+        TResult VisitWhileStmt(While @while);
 }

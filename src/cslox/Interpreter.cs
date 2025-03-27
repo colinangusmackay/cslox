@@ -145,6 +145,16 @@ public class Interpreter : IExprVisitor<object?>, IStmtVisitor<Unit>
         return Unit.Value;
     }
 
+    public Unit VisitWhileStmt(While @while)
+    {
+        while (IsTruthy(Evaluate(@while.Condition)))
+        {
+            Execute(@while.Body);
+        }
+
+        return Unit.Value;
+    }
+
     public object? VisitAssignExpr(Assign assign)
     {
         object? value = Evaluate(assign.Value);
