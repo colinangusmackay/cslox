@@ -273,6 +273,10 @@ public class Parser
         {
             do
             {
+                if (arguments.Count >= 255)
+                {
+                    Error(Peek(), "Can't have more than 255 arguments.");
+                }
                 arguments.Add(Expression());
             } while (Match(TokenType.Comma));
         }
