@@ -63,6 +63,22 @@ public class Interpreter : IExprVisitor<object?>, IStmtVisitor<Unit>
         return null;
     }
 
+    public object? VisitCallExpr(Call call)
+    {
+        Object? callee = Evaluate(call.Callee);
+        List<object?> arguments = new();
+        foreach (Expr argument in call.Arguments)
+        {
+            arguments.Add(Evaluate(argument));
+        }
+
+        if (callee is not ILoxCallable function)
+        {
+            throw new RuntimeException(call.Paren, "Can only call functions and classes.");
+        }
+        return function.Call(this, arguments);
+    }
+
     public object? VisitGroupingExpr(Grouping grouping)
         => Evaluate(grouping.Expression);
 
