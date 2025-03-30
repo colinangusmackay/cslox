@@ -52,6 +52,7 @@ public class Parser
 
     private Stmt Statement()
     {
+        if (Match(TokenType.For)) return ForStatement();
         if (Match(TokenType.If)) return IfStatement();
         if (Match(TokenType.Print)) return PrintStatement();
         if (Match(TokenType.While)) return WhileStatement();
@@ -59,8 +60,58 @@ public class Parser
         return ExpressionStatement();
     }
 
+    private Stmt ForStatement()
+    {
+        // for (initializer; condition; increment) body
+        Consume(TokenType.LeftParen, "Expect '(' after 'for'.");
+
+        Stmt? initializer = null;
+        if (Match(TokenType.Semicolon))
+        {
+            // Do nothing.
+        }
+        else if (Match(TokenType.Var))
+        {
+            initializer = VarDeclaration();
+        }
+        else
+        {
+            initializer = ExpressionStatement();
+        }
+
+        Expr? condition = null;
+        if (!Check(TokenType.Semicolon))
+        {
+            condition = Expression();
+        }
+        Consume(TokenType.Semicolon, "Expect ';' after loop condition.");
+
+        Expr? increment = null;
+        if (!Check(TokenType.RightParen))
+        {
+            increment = Expression();
+        }
+        Consume(TokenType.RightParen, "Expect ')' after for clauses.");
+
+        Stmt body = Statement();
+
+        if (increment != null)
+            body = new Block([body, new Expression(increment)]);
+
+        if (condition == null) condition = new Literal(true);
+        body = new While(condition, body);
+
+        if (initializer != null)
+        {
+            body = new Block([initializer, body]);
+        }
+
+        return body;
+    }
+
     private Stmt WhileStatement()
     {
+        // while (condition) body
         Consume(TokenType.LeftParen, "Expect '(' after 'while'.");
         Expr condition = Expression();
         Consume(TokenType.RightParen, "Expect ')' after condition.");
