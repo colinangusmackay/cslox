@@ -1,10 +1,19 @@
 using cslox.AbstractSyntaxTree;
+using cslox.NativeFunctions;
 
 namespace cslox;
 
 public class Interpreter : IExprVisitor<object?>, IStmtVisitor<Unit>
 {
-    private InterpreterEnvironment _interpreterEnvironment = new();
+    private readonly InterpreterEnvironment _globalEnvironment = new();
+    private InterpreterEnvironment _interpreterEnvironment;
+
+    public Interpreter()
+    {
+        _interpreterEnvironment = _globalEnvironment;
+
+        _globalEnvironment.Define("clock", new Clock());
+    }
 
     public void Interpret(List<Stmt> statements)
     {
