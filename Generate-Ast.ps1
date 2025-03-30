@@ -183,6 +183,7 @@ DefineAst -baseName "Expr" -types @(
 DefineAst -baseName "Stmt" -types @(
     "Block      : List<Stmt> Statements",
     "Expression : Expr InnerExpression",
+    "Function   : Token Name, List<Token> Parameters, List<Stmt> Body",
     "If         : Expr Condition, Stmt ThenBranch, Stmt? ElseBranch",
     "Print      : Expr Expression",
     "Var        : Token Name, Expr? Initializer",
