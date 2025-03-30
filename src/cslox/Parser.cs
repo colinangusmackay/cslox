@@ -244,7 +244,41 @@ public class Parser
             return new Unary(@operator, right);
         }
 
-        return Primary();
+        return Call();
+    }
+
+    private Expr Call()
+    {
+        Expr expr = Primary();
+
+        while (true)
+        {
+            if (Match(TokenType.LeftParen))
+            {
+                expr = FinishCall(expr);
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        return expr;
+    }
+
+    private Expr FinishCall(Expr callee)
+    {
+        List<Expr> arguments = new List<Expr>();
+        if (!Check(TokenType.RightParen))
+        {
+            do
+            {
+                arguments.Add(Expression());
+            } while (Match(TokenType.Comma));
+        }
+
+        Token paren = Consume(TokenType.RightParen, "Expect ')' after arguments.");
+        return new Call(callee, paren, arguments);
     }
 
     private Expr Primary()
