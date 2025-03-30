@@ -76,6 +76,12 @@ public class Interpreter : IExprVisitor<object?>, IStmtVisitor<Unit>
         {
             throw new RuntimeException(call.Paren, "Can only call functions and classes.");
         }
+
+        if (arguments.Count != function.Arity())
+        {
+            throw new RuntimeException(call.Paren, $"Expected {function.Arity()} arguments but got {arguments.Count}.");
+        }
+
         return function.Call(this, arguments);
     }
 
