@@ -1,4 +1,4 @@
-namespace cslox.NativeFunctions;
+namespace cslox.Functions.NativeFunctions;
 
 public class Clock : ILoxCallable
 {

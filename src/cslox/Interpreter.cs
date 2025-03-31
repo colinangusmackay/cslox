@@ -1,5 +1,5 @@
 using cslox.AbstractSyntaxTree;
-using cslox.NativeFunctions;
+using cslox.Functions.NativeFunctions;
 
 namespace cslox;
 
@@ -14,6 +14,8 @@ public class Interpreter : IExprVisitor<object?>, IStmtVisitor<Unit>
 
         _globalEnvironment.Define("clock", new Clock());
     }
+
+    public InterpreterEnvironment Globals => _globalEnvironment;
 
     public void Interpret(List<Stmt> statements)
     {
@@ -198,7 +200,7 @@ public class Interpreter : IExprVisitor<object?>, IStmtVisitor<Unit>
         stmt.Accept(this);
     }
 
-    private void ExecuteBlock(List<Stmt> statements, InterpreterEnvironment environment)
+    public void ExecuteBlock(List<Stmt> statements, InterpreterEnvironment environment)
     {
         InterpreterEnvironment previous = _interpreterEnvironment;
         try
