@@ -80,9 +80,23 @@ public class Parser
         if (Match(TokenType.For)) return ForStatement();
         if (Match(TokenType.If)) return IfStatement();
         if (Match(TokenType.Print)) return PrintStatement();
+        if (Match(TokenType.Return)) return ReturnStatement();
         if (Match(TokenType.While)) return WhileStatement();
         if (Match(TokenType.LeftBrace)) return new Block(Block());
         return ExpressionStatement();
+    }
+
+    private Stmt ReturnStatement()
+    {
+        Token keyword = Previous();
+        Expr? value = null;
+        if (!Check(TokenType.Semicolon))
+        {
+            value = Expression();
+        }
+
+        Consume(TokenType.Semicolon, "Expect ';' after return value.");
+        return new Return(keyword, value);
     }
 
     private Stmt ForStatement()

@@ -1,7 +1,7 @@
 $outputDir = "$PSScriptRoot/src/cslox/AbstractSyntaxTree";
 $namespace = "cslox.AbstractSyntaxTree";
 
-$keywords = [System.Collections.Immutable.ImmutableHashSet]::Create("if", "operator", "var", "while");
+$keywords = [System.Collections.Immutable.ImmutableHashSet]::Create("if", "operator", "return", "var", "while");
 
 function DefineAst{ param([string]$baseName, [object[]]$types)
     $path = "$outputDir/$baseName.cs";
@@ -186,6 +186,7 @@ DefineAst -baseName "Stmt" -types @(
     "Function   : Token Name, List<Token> Parameters, List<Stmt> Body",
     "If         : Expr Condition, Stmt ThenBranch, Stmt? ElseBranch",
     "Print      : Expr Expression",
+    "Return     : Token keyword, Expr? Value",
     "Var        : Token Name, Expr? Initializer",
     "While      : Expr Condition, Stmt Body"
     );
