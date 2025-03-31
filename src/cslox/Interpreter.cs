@@ -1,4 +1,5 @@
 using cslox.AbstractSyntaxTree;
+using cslox.Functions;
 using cslox.Functions.NativeFunctions;
 
 namespace cslox;
@@ -148,6 +149,13 @@ public class Interpreter : IExprVisitor<object?>, IStmtVisitor<Unit>
     public Unit VisitExpressionStmt(Expression expression)
     {
         Evaluate(expression.InnerExpression);
+        return Unit.Value;
+    }
+
+    public Unit VisitFunctionStmt(Function function)
+    {
+        LoxFunction fn = new LoxFunction(function);
+        _interpreterEnvironment.Define(function.Name.Lexeme, fn);
         return Unit.Value;
     }
 
