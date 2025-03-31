@@ -186,7 +186,7 @@ DefineAst -baseName "Stmt" -types @(
     "Function   : Token Name, List<Token> Parameters, List<Stmt> Body",
     "If         : Expr Condition, Stmt ThenBranch, Stmt? ElseBranch",
     "Print      : Expr Expression",
-    "Return     : Token keyword, Expr? Value",
+    "Return     : Token Keyword, Expr? Value",
     "Var        : Token Name, Expr? Initializer",
     "While      : Expr Condition, Stmt Body"
     );

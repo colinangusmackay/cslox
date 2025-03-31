@@ -21,7 +21,15 @@ public class LoxFunction : ILoxCallable
             environment.Define(name, value);
         }
 
-        interpreter.ExecuteBlock(_declaration.Body, environment);
+        try
+        {
+            interpreter.ExecuteBlock(_declaration.Body, environment);
+        }
+        catch (ReturnControlFlow rcf)
+        {
+            return rcf.Value;
+        }
+
         return null;
     }
 

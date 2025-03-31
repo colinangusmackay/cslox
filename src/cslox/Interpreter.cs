@@ -176,9 +176,18 @@ public class Interpreter : IExprVisitor<object?>, IStmtVisitor<Unit>
         return Unit.Value;
     }
 
+    public Unit VisitReturnStmt(Return @return)
+    {
+        object? value = @return.Value == null
+            ? null
+            : Evaluate(@return.Value);
+
+        throw new ReturnControlFlow(value);
+    }
+
     public Unit VisitVarStmt(Var var)
     {
-        Object? value = null;
+        object? value = null;
         if (var.Initializer != null)
             value = Evaluate(var.Initializer);
 
