@@ -154,7 +154,7 @@ public class Interpreter : IExprVisitor<object?>, IStmtVisitor<Unit>
 
     public Unit VisitFunctionStmt(Function function)
     {
-        LoxFunction fn = new LoxFunction(function);
+        LoxFunction fn = new LoxFunction(function, _interpreterEnvironment);
         _interpreterEnvironment.Define(function.Name.Lexeme, fn);
         return Unit.Value;
     }

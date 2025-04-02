@@ -5,15 +5,17 @@ namespace cslox.Functions;
 public class LoxFunction : ILoxCallable
 {
     private readonly Function _declaration;
+    private readonly InterpreterEnvironment _closure = new();
 
-    public LoxFunction(Function declaration)
+    public LoxFunction(Function declaration, InterpreterEnvironment closure)
     {
         _declaration = declaration;
+        _closure = closure;
     }
 
     public object? Call(Interpreter interpreter, List<object?> arguments)
     {
-        InterpreterEnvironment environment = new InterpreterEnvironment(interpreter.Globals);
+        InterpreterEnvironment environment = new InterpreterEnvironment(_closure);
         for (int i = 0; i < _declaration.Parameters.Count; i++)
         {
             var name = _declaration.Parameters[i].Lexeme;
