@@ -1,0 +1,28 @@
+var a = 0;
+var b = 0;
+
+var startTime = clock();
+for(var i = 0; i < 200; i = i + 1)
+{
+
+    var current;
+    if (i < 2)
+    {
+        current = i;
+    }
+    else
+    {
+        current = a + b;
+    }
+
+    a = b;
+    b = current;
+
+
+    var message = toString(i) + ": " + toString(current);
+    print message;
+}
+var duration = clock() - startTime;
+
+print "---";
+print "took " + toString(clock() - startTime) + " second to compute";

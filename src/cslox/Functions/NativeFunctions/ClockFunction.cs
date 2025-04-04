@@ -1,6 +1,6 @@
 namespace cslox.Functions.NativeFunctions;
 
-public class Clock : ILoxCallable
+public class ClockFunction : ILoxCallable
 {
     public object? Call(Interpreter interpreter, List<object?> arguments)
         => (DateTime.UtcNow.Ticks - DateTime.UnixEpoch.Ticks) / (double)TimeSpan.TicksPerSecond;

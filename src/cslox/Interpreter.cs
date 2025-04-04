@@ -13,7 +13,8 @@ public class Interpreter : IExprVisitor<object?>, IStmtVisitor<Unit>
     {
         _interpreterEnvironment = _globalEnvironment;
 
-        _globalEnvironment.Define("clock", new Clock());
+        _globalEnvironment.Define("clock", new ClockFunction());
+        _globalEnvironment.Define("toString", new ToStringFunction());
     }
 
     public InterpreterEnvironment Globals => _globalEnvironment;

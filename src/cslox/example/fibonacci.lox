@@ -1,0 +1,63 @@
+fun fib(n)
+{
+    if (n < 2) return n;
+    return fib(n-1) + fib(n-2);
+}
+
+for(var i = 0; i < 200; i = i + 1)
+{
+    var startTime = clock();
+    var sequence = fib(i);
+    var duration = clock() - startTime;
+
+    var message = toString(i) + ": " + toString(sequence) + " (took " + toString(duration) + " seconds to compute)";
+    print message;
+}
+
+/*
+0: 0 (took 0.0004429817199707031 seconds to compute)
+1: 1 (took 3.814697265625E-05 seconds to compute)
+2: 1 (took 6.389617919921875E-05 seconds to compute)
+3: 2 (took 6.985664367675781E-05 seconds to compute)
+4: 3 (took 0.00012493133544921875 seconds to compute)
+5: 5 (took 0.0001971721649169922 seconds to compute)
+6: 8 (took 0.0003190040588378906 seconds to compute)
+7: 13 (took 0.0005230903625488281 seconds to compute)
+8: 21 (took 0.0008440017700195312 seconds to compute)
+9: 34 (took 0.0013680458068847656 seconds to compute)
+10: 55 (took 0.002228975296020508 seconds to compute)
+11: 89 (took 0.003742218017578125 seconds to compute)
+12: 144 (took 0.005880117416381836 seconds to compute)
+13: 233 (took 0.009771108627319336 seconds to compute)
+14: 377 (took 0.015432119369506836 seconds to compute)
+15: 610 (took 0.02532196044921875 seconds to compute)
+16: 987 (took 0.041383981704711914 seconds to compute)
+17: 1597 (took 0.06587886810302734 seconds to compute)
+18: 2584 (took 0.10678696632385254 seconds to compute)
+19: 4181 (took 0.16715717315673828 seconds to compute)
+20: 6765 (took 0.2712879180908203 seconds to compute)
+21: 10946 (took 0.4368419647216797 seconds to compute)
+22: 17711 (took 0.7071681022644043 seconds to compute)
+23: 28657 (took 1.1451258659362793 seconds to compute)
+24: 46368 (took 1.848275899887085 seconds to compute)
+25: 75025 (took 2.9915528297424316 seconds to compute)
+26: 121393 (took 4.8439459800720215 seconds to compute)
+27: 196418 (took 7.82231879234314 seconds to compute)
+28: 317811 (took 12.64789080619812 seconds to compute)
+29: 514229 (took 20.487262964248657 seconds to compute)
+30: 832040 (took 33.23060703277588 seconds to compute)
+31: 1346269 (took 53.74004817008972 seconds to compute)
+32: 2178309 (took 87.03031492233276 seconds to compute)
+33: 3524578 (took 141.18795800209045 seconds to compute)
+34: 5702887 (took 227.97266697883606 seconds to compute)
+35: 9227465 (took 368.3862512111664 seconds to compute)
+36: 14930352 (took 600.2603669166565 seconds to compute)
+37: 24157817 (took 955.5489900112152 seconds to compute)
+38: 39088169 (took 1544.330129146576 seconds to compute)
+39: 63245986 (took 2508.941171169281 seconds to compute)
+40: 102334155 (took 4055.4485149383545 seconds to compute)
+41: 165580141 (took 6572.2789170742035 seconds to compute)
+42: 267914296 (took 10601.039612054825 seconds to compute)
+43: 433494437 (took 17138.702168941498 seconds to compute)
+44: 701408733 (took 27780.467499017715 seconds to compute)
+*/
