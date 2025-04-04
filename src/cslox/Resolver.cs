@@ -87,7 +87,11 @@ public class Resolver : IExprVisitor<Unit>, IStmtVisitor<Unit>
 
     public Unit VisitVarStmt(Var var)
     {
-        throw new NotImplementedException();
+        Declare(var.Name);
+        if (var.Initializer != null)
+            Resolve(var.Initializer);
+        Define(var.Name);
+        return Unit.Value;
     }
 
     public Unit VisitWhileStmt(While @while)
@@ -121,5 +125,19 @@ public class Resolver : IExprVisitor<Unit>, IStmtVisitor<Unit>
     private void EndScope()
     {
         _scopes.Pop();
+    }
+
+    private void Declare(Token name)
+    {
+        if (_scopes.Count == 0) return;
+
+        var scope = _scopes.Peek();
+        scope.Add(name.Lexeme, false);
+    }
+
+    private void Define(Token name)
+    {
+        if (_scopes.Count == 0) return;
+        _scopes.Peek()[name.Lexeme] = true;
     }
 }
