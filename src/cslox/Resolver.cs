@@ -49,7 +49,18 @@ public class Resolver : IExprVisitor<Unit>, IStmtVisitor<Unit>
 
     public Unit VisitVariableExpr(Variable variable)
     {
-        throw new NotImplementedException();
+        if (_scopes.Count > 0)
+        {
+            var scope = _scopes.Peek();
+            var isDefined = scope.TryGetValue(variable.Name.Lexeme, out var isDefinedInScope);
+            if (isDefined && !isDefinedInScope)
+            {
+                Lox.Error(variable.Name, $"Cannot read local variable '{variable.Name.Lexeme}' in its own initializer.");
+            }
+        }
+
+        ResolveLocal(variable, variable.Name);
+        return Unit.Value;
     }
 
     public Unit VisitBlockStmt(Block block)
@@ -139,5 +150,17 @@ public class Resolver : IExprVisitor<Unit>, IStmtVisitor<Unit>
     {
         if (_scopes.Count == 0) return;
         _scopes.Peek()[name.Lexeme] = true;
+    }
+
+    private void ResolveLocal(Expr expr, Token name)
+    {
+        for (int i = _scopes.Count - 1; i >= 0; i--)
+        {
+            if (_scopes.ElementAt(i).ContainsKey(name.Lexeme))
+            {
+                _interpreter.Resolve(expr, _scopes.Count - 1 - i);
+                return;
+            }
+        }
     }
 }
