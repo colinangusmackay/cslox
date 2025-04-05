@@ -80,7 +80,11 @@ public class Resolver : IExprVisitor<Unit>, IStmtVisitor<Unit>
 
     public Unit VisitFunctionStmt(Function function)
     {
-        throw new NotImplementedException();
+        Declare(function.Name);
+        Define(function.Name);
+
+        ResolveFunction(function);
+        return Unit.Value;
     }
 
     public Unit VisitIfStmt(If @if)
@@ -164,5 +168,17 @@ public class Resolver : IExprVisitor<Unit>, IStmtVisitor<Unit>
                 return;
             }
         }
+    }
+
+    private void ResolveFunction(Function function)
+    {
+        BeginScope();
+        foreach (var param in function.Parameters)
+        {
+            Declare(param);
+            Define(param);
+        }
+        Resolve(function.Body);
+        EndScope();
     }
 }
