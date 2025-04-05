@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace cslox;
 
 public class InterpreterEnvironment
@@ -33,6 +35,23 @@ public class InterpreterEnvironment
         }
 
         throw new RuntimeException(name, $"Undefined variable '{name.Lexeme}'.");
+    }
+
+    public object? GetAt(int distance, string name)
+    {
+        return Ancestor(distance)._values[name];
+    }
+
+    private InterpreterEnvironment Ancestor(int distance)
+    {
+        InterpreterEnvironment? environment = this;
+        for (int i = 0; i < distance; i++)
+        {
+            environment = environment._enclosing;
+            Debug.Assert(environment != null);
+        }
+
+        return environment;
     }
 
     public void Assign(Token name, object? value)

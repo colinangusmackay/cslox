@@ -139,7 +139,16 @@ public class Interpreter : IExprVisitor<object?>, IStmtVisitor<Unit>
 
     public object? VisitVariableExpr(Variable variable)
     {
-        return _interpreterEnvironment.Get(variable.Name);
+        return LookupVariable(variable.Name, variable);
+//        return _interpreterEnvironment.Get(variable.Name);
+    }
+
+    private object? LookupVariable(Token name, Expr expr)
+    {
+        int distance = _locals.TryGetValue(expr, out var depth) ? depth : int.MaxValue;
+        if (distance == int.MaxValue)
+            return _globalEnvironment.Get(name);
+        return _interpreterEnvironment.GetAt(distance, name);
     }
 
     public Unit VisitBlockStmt(Block block)
