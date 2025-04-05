@@ -21,32 +21,44 @@ public class Resolver : IExprVisitor<Unit>, IStmtVisitor<Unit>
 
     public Unit VisitBinaryExpr(Binary binary)
     {
-        throw new NotImplementedException();
+        Resolve(binary.Left);
+        Resolve(binary.Right);
+        return Unit.Value;
     }
 
     public Unit VisitCallExpr(Call call)
     {
-        throw new NotImplementedException();
+        Resolve(call.Callee);
+        foreach (var argument in call.Arguments)
+        {
+            Resolve(argument);
+        }
+
+        return Unit.Value;
     }
 
     public Unit VisitGroupingExpr(Grouping grouping)
     {
-        throw new NotImplementedException();
+        Resolve(grouping.Expression);
+        return Unit.Value;
     }
 
     public Unit VisitLiteralExpr(Literal literal)
     {
-        throw new NotImplementedException();
+        return Unit.Value;
     }
 
     public Unit VisitLogicalExpr(Logical logical)
     {
-        throw new NotImplementedException();
+        Resolve(logical.Left);
+        Resolve(logical.Right);
+        return Unit.Value;
     }
 
     public Unit VisitUnaryExpr(Unary unary)
     {
-        throw new NotImplementedException();
+        Resolve(unary.Right);
+        return Unit.Value;
     }
 
     public Unit VisitVariableExpr(Variable variable)
@@ -75,7 +87,8 @@ public class Resolver : IExprVisitor<Unit>, IStmtVisitor<Unit>
 
     public Unit VisitExpressionStmt(Expression expression)
     {
-        throw new NotImplementedException();
+        Resolve(expression.InnerExpression);
+        return Unit.Value;
     }
 
     public Unit VisitFunctionStmt(Function function)
@@ -89,17 +102,24 @@ public class Resolver : IExprVisitor<Unit>, IStmtVisitor<Unit>
 
     public Unit VisitIfStmt(If @if)
     {
-        throw new NotImplementedException();
+        Resolve(@if.Condition);
+        Resolve(@if.ThenBranch);
+        if (@if.ElseBranch != null)
+            Resolve(@if.ElseBranch);
+        return Unit.Value;
     }
 
     public Unit VisitPrintStmt(Print print)
     {
-        throw new NotImplementedException();
+        Resolve(print.Expression);
+        return Unit.Value;
     }
 
     public Unit VisitReturnStmt(Return @return)
     {
-        throw new NotImplementedException();
+        if (@return.Value != null)
+            Resolve(@return.Value);
+        return Unit.Value;
     }
 
     public Unit VisitVarStmt(Var var)
@@ -113,7 +133,9 @@ public class Resolver : IExprVisitor<Unit>, IStmtVisitor<Unit>
 
     public Unit VisitWhileStmt(While @while)
     {
-        throw new NotImplementedException();
+        Resolve(@while.Condition);
+        Resolve(@while.Body);
+        return Unit.Value;
     }
 
     private void Resolve(List<Stmt> statements)
