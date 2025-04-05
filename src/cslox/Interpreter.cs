@@ -8,6 +8,7 @@ public class Interpreter : IExprVisitor<object?>, IStmtVisitor<Unit>
 {
     private readonly InterpreterEnvironment _globalEnvironment = new();
     private InterpreterEnvironment _interpreterEnvironment;
+    private readonly Dictionary<Expr, int> _locals = new();
 
     public Interpreter()
     {
@@ -216,6 +217,11 @@ public class Interpreter : IExprVisitor<object?>, IStmtVisitor<Unit>
     private void Execute(Stmt stmt)
     {
         stmt.Accept(this);
+    }
+
+    public void Resolve(Expr expr, int depth)
+    {
+        _locals[expr] = depth;
     }
 
     public void ExecuteBlock(List<Stmt> statements, InterpreterEnvironment environment)
