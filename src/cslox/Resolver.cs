@@ -14,7 +14,9 @@ public class Resolver : IExprVisitor<Unit>, IStmtVisitor<Unit>
 
     public Unit VisitAssignExpr(Assign assign)
     {
-        throw new NotImplementedException();
+        Resolve(assign.Value);
+        ResolveLocal(assign, assign.Name);
+        return Unit.Value;
     }
 
     public Unit VisitBinaryExpr(Binary binary)
