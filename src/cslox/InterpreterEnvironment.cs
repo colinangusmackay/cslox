@@ -70,4 +70,9 @@ public class InterpreterEnvironment
 
         throw new RuntimeException(name, $"Undefined variable '{name.Lexeme}'.");
     }
+
+    public void AssignAt(int distance, Token name, object? value)
+    {
+        Ancestor(distance)._values[name.Lexeme] = value;
+    }
 }

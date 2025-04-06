@@ -140,7 +140,6 @@ public class Interpreter : IExprVisitor<object?>, IStmtVisitor<Unit>
     public object? VisitVariableExpr(Variable variable)
     {
         return LookupVariable(variable.Name, variable);
-//        return _interpreterEnvironment.Get(variable.Name);
     }
 
     private object? LookupVariable(Token name, Expr expr)
@@ -148,7 +147,7 @@ public class Interpreter : IExprVisitor<object?>, IStmtVisitor<Unit>
         int distance = _locals.TryGetValue(expr, out var depth) ? depth : int.MaxValue;
         if (distance == int.MaxValue)
             return _globalEnvironment.Get(name);
-        return _interpreterEnvironment.GetAt(distance, name);
+        return _interpreterEnvironment.GetAt(distance, name.Lexeme);
     }
 
     public Unit VisitBlockStmt(Block block)
@@ -218,9 +217,19 @@ public class Interpreter : IExprVisitor<object?>, IStmtVisitor<Unit>
 
     public object? VisitAssignExpr(Assign assign)
     {
-        object? value = Evaluate(assign.Value);
-        _interpreterEnvironment.Assign(assign.Name, value);
+        int distance = _locals.TryGetValue(assign, out var depth) ? depth : int.MaxValue;
+        var value = Evaluate(assign.Value);
+        if (distance == int.MaxValue)
+            _globalEnvironment.Assign(assign.Name, value);
+        else
+        {
+            _interpreterEnvironment.AssignAt(distance, assign.Name, value);
+        }
+
         return value;
+        // object? value = Evaluate(assign.Value);
+        // _interpreterEnvironment.Assign(assign.Name, value);
+        // return value;
     }
 
     private void Execute(Stmt stmt)
